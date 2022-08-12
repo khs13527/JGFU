@@ -1,12 +1,22 @@
 package com.sparta.backend.domain;
 
+
 import lombok.Getter;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.Set;
 
-@Getter
+
 @Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
 public class Post extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,4 +49,13 @@ public class Post extends Timestamped {
     @JoinColumn(name = "member_id", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
+
+    public void viewsAddCount() {
+        this.views += 1L;
+    }
+
+    public void updateView(Post post) {
+        this.views = post.getViews();
+    }
+
 }
