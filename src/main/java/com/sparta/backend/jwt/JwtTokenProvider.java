@@ -1,7 +1,6 @@
 package com.sparta.backend.jwt;
 
 import com.sparta.backend.domain.Member;
-import com.sparta.backend.domain.UserDetailsImpl;
 import com.sparta.backend.dto.JwtTokenDto;
 import com.sparta.backend.shared.Authority;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -16,9 +15,6 @@ import java.security.Key;
 import java.util.Date;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -28,7 +24,7 @@ public class JwtTokenProvider {
     private static final String AUTHORITIES_KEY = "auth";
 
     private static final String BEARER_PREFIX = "Bearer ";
-    private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 30;            //30분
+    private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 60 * 72;            //30분
     private final Key key;
 
     public JwtTokenProvider(@Value("${jwt.secret}") String secretKey) {
