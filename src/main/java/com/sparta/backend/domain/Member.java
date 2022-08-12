@@ -1,11 +1,13 @@
 package com.sparta.backend.domain;
 
 import com.sparta.backend.test.TestMemberCreateDto;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
+@NoArgsConstructor
 @Entity
 public class Member extends Timestamped {
 
