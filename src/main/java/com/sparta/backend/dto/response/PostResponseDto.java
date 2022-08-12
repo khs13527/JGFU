@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Builder
 @Getter
 @NoArgsConstructor
@@ -17,4 +19,5 @@ public class PostResponseDto {
     private String imgUrl;
     private String category;
     private Long views;
+    private List<CommentResponseDto> commentResponseDtoList;
 }

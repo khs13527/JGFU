@@ -19,7 +19,7 @@ public class CommentController {
     }
     @PutMapping(value = "/api/auth/posts/{postId}/comments/{commentId}")
     public ResponseDto<?> updateComment(@RequestBody CommentRequestDto commentRequestDto, @PathVariable Long postId, @PathVariable Long commentId, HttpServletRequest request) {
-        return commentService.updateComment(commentRequestDto, postId, commentId);
+        return commentService.updateComment(commentRequestDto, postId, commentId, request);
     }
 
     @DeleteMapping(value = "/api/auth/posts/{postId}/comments/{commentId}")

@@ -24,4 +24,9 @@ public class PostController {
     public ResponseDto<?> getPostDetail(@PathVariable Long postId){
         return postService.getPostDetail(postId);
     }
+
+//    @GetMapping(value = "/api/category/{category}")
+//    public ResponseDto<?> getPostByCategory(@PathVariable String category){
+//        return postService.getPostByCategory(category);
+//    }
 }

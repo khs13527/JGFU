@@ -45,4 +45,13 @@ public class Post extends Timestamped {
     @JoinColumn(name = "member_id", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
+
+    public void viewsAddCount() {
+        this.views += 1L;
+    }
+
+    public void updateView(Post post) {
+        this.views = post.getViews();
+    }
+
 }
