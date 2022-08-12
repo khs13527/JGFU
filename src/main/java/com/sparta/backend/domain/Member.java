@@ -1,10 +1,13 @@
 package com.sparta.backend.domain;
 
+import lombok.Getter;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
+@Getter
 public class Member extends Timestamped {
 
     @Id
