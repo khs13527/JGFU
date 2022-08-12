@@ -1,11 +1,13 @@
 package com.sparta.backend.domain;
 
+import lombok.Getter;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.Hibernate;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
 
 import javax.persistence.*;
 import java.util.HashSet;

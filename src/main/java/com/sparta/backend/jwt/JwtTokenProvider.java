@@ -28,7 +28,7 @@ public class JwtTokenProvider {
     private static final String AUTHORITIES_KEY = "auth";
 
     private static final String BEARER_PREFIX = "Bearer ";
-    private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 30;            //30분
+    private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 60 * 24 * 3;            //3일
     private final Key key;
 
     public JwtTokenProvider(@Value("${jwt.secret}") String secretKey) {
@@ -71,14 +71,14 @@ public class JwtTokenProvider {
 //    return new UsernamePasswordAuthenticationToken(principal, "", authorities);
 //  }
 
-//    public Member getMemberFromAuthentication() {
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        if (authentication == null || AnonymousAuthenticationToken.class.
-//                isAssignableFrom(authentication.getClass())) {
-//            return null;
-//        }
-//        return ((UserDetailsImpl) authentication.getPrincipal()).getMember();
-//    }
+    public Member getMemberFromAuthentication() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || AnonymousAuthenticationToken.class.
+                isAssignableFrom(authentication.getClass())) {
+            return null;
+        }
+        return ((UserDetailsImpl) authentication.getPrincipal()).getMember();
+    }
 
     public boolean validateToken(String token) {
         try {
