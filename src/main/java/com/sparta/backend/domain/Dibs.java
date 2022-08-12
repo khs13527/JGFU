@@ -1,7 +1,10 @@
 package com.sparta.backend.domain;
 
+import lombok.Setter;
+
 import javax.persistence.*;
 
+@Setter
 @Entity
 public class Dibs extends Timestamped {
     @Id
