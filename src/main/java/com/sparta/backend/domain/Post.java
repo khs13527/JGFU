@@ -1,8 +1,11 @@
 package com.sparta.backend.domain;
 
+import lombok.Getter;
+
 import javax.persistence.*;
 import java.util.Set;
 
+@Getter
 @Entity
 public class Post extends Timestamped {
     @Id
