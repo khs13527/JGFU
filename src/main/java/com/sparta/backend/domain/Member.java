@@ -1,5 +1,7 @@
 package com.sparta.backend.domain;
 
+import com.sparta.backend.test.TestMemberCreateDto;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -25,4 +27,10 @@ public class Member extends Timestamped {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "member", cascade = CascadeType.ALL)
     private Set<Comment> commentSet = new HashSet<>();
+
+    //테스트 유저 생성 메소드
+    public Member(TestMemberCreateDto requestDto){
+        this.memberId = requestDto.getMemberId();
+        this.password = requestDto.getPassword();
+    }
 }
