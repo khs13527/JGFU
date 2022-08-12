@@ -1,0 +1,39 @@
+package com.sparta.backend.domain;
+
+import javax.persistence.*;
+import java.util.Set;
+
+@Entity
+public class Post extends Timestamped {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false)
+    private String title;
+
+    @Column(nullable = false)
+    private String content;
+
+    @Column(nullable = false)
+    private Long price;
+
+    @Column(nullable = false)
+    private String imgUrl;
+
+    @Column(nullable = false)
+    private String category;
+
+    @Column
+    private Long views = 0L;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Comment> commentSet;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Dibs> dibsSet;
+
+    @JoinColumn(name = "member_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Member member;
+}
