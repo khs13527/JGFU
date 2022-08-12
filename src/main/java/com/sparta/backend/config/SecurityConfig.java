@@ -1,9 +1,6 @@
 package com.sparta.backend.config;
 
-import com.myphoto.backend.security.jwt.JwtAccessDeniedHandler;
-import com.myphoto.backend.security.jwt.JwtAuthenticationEntryPoint;
-import com.myphoto.backend.security.jwt.JwtTokenFilterConfigurer;
-import com.myphoto.backend.security.jwt.JwtTokenProvider;
+
 import com.sparta.backend.jwt.JwtAccessDeniedHandler;
 import com.sparta.backend.jwt.JwtAuthenticationEntryPoint;
 import com.sparta.backend.jwt.JwtTokenFilterConfigurer;
