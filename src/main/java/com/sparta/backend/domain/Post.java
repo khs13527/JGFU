@@ -1,8 +1,6 @@
 package com.sparta.backend.domain;
 
 
-import lombok.Getter;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,7 +8,6 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.Set;
-
 
 @Entity
 @Builder

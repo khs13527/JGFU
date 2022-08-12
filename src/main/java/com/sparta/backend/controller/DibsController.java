@@ -13,8 +13,8 @@ import javax.servlet.http.HttpServletRequest;
 @RequiredArgsConstructor
 public class DibsController {
     private final DibsService dibsService;
-    @PostMapping("/api/auth/dibs/posts/{postId}/user/{userId}")
-    public ResponseDto<?> dibsButton(@PathVariable Long postId, @PathVariable Long userId) {
-        return ResponseDto.success(dibsService.dibsUpDown(postId, userId));
+    @PostMapping("/api/auth/dibs/posts/{postId}")
+    public ResponseDto<?> dibsButton(@PathVariable Long postId, HttpServletRequest request) {
+        return ResponseDto.success(dibsService.dibsUpDown(postId, request));
     }
 }

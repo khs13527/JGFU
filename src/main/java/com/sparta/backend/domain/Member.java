@@ -1,10 +1,6 @@
 package com.sparta.backend.domain;
 
 
-import com.sparta.backend.test.TestMemberCreateDto;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Getter;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,8 +12,6 @@ import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
-
-
 
 @Getter
 @Builder

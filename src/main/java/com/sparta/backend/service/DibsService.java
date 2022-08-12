@@ -4,28 +4,38 @@ import com.sparta.backend.domain.Dibs;
 import com.sparta.backend.domain.Member;
 import com.sparta.backend.domain.Post;
 import com.sparta.backend.dto.response.ResponseDto;
+import com.sparta.backend.jwt.JwtTokenProvider;
 import com.sparta.backend.repository.DibsRepository;
 import com.sparta.backend.repository.MemberRepository;
 import com.sparta.backend.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 
 @Service
 @RequiredArgsConstructor
 public class DibsService {
-    private final MemberRepository memberRepository;
+    private final JwtTokenProvider jwtTokenProvider;
+    private final PostService postService;
     private final DibsRepository dibsRepository;
-    private final PostRepository postRepository;
     @Transactional
-    public ResponseDto<?> dibsUpDown(Long postId, Long userId){
-        Post post = postRepository.findById(postId).orElseThrow(
-                () -> new IllegalArgumentException("게시글이 존재하지 않습니다.")
-        );
-        Member member = memberRepository.findById(userId).orElseThrow(
-                () -> new IllegalArgumentException("아이디가 존재하지 않습니다.")
-        );
+    public ResponseDto<?> dibsUpDown(Long postId, HttpServletRequest request){
+        if (null == request.getHeader("Authorization")) {
+            return ResponseDto.fail("MEMBER_NOT_FOUND",
+                    "로그인이 필요합니다.");
+        }
+
+        Member member = validateMember(request);
+        if (null == member) {
+            return ResponseDto.fail("INVALID_TOKEN", "Token이 유효하지 않습니다.");
+        }
+
+        Post post = postService.isPresentPost(postId);
+        if (null == post) {
+            return ResponseDto.fail("NOT_FOUND", "존재하지 않는 게시글 id 입니다.");
+        }
 
         if(dibsRepository.findByPost(post).equals(null)){
             Dibs dibs = new Dibs();
@@ -36,5 +46,12 @@ public class DibsService {
             dibsRepository.deleteByPostAndMember(post, member);
          return ResponseDto.success("down");
         }
+    }
+    @org.springframework.transaction.annotation.Transactional
+    public Member validateMember(HttpServletRequest request) {
+        if (!jwtTokenProvider.validateToken(request.getHeader("Authorization").substring(7))) {
+            return null;
+        }
+        return jwtTokenProvider.getMemberFromAuthentication();
     }
 }
