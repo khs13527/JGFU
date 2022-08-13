@@ -13,7 +13,8 @@ import java.time.LocalDateTime;
 public class CommentResponseDto {
     private Long id;
     private String content;
-    private Long memberId;
+    private String memberId;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
+    private Long postId;
 }

@@ -15,6 +15,7 @@ public class PostResponseDto {
     private Long id;
     private String title;
     private String content;
+    private String memberId;
     private Long price;
     private String imgUrl;
     private String category;
