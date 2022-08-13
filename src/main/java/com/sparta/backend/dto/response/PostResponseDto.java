@@ -19,6 +19,7 @@ public class PostResponseDto {
     private Long price;
     private String imgUrl;
     private String category;
+    private Long dibCount;
     private Long views;
     private List<CommentResponseDto> commentResponseDtoList;
 }

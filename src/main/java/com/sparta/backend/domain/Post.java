@@ -64,4 +64,8 @@ public class Post extends Timestamped {
         this.imgUrl = imgUrl;
     }
 
+    public boolean validateMember(Member member) {
+        return !this.member.equals(member);
+    }
+
 }
