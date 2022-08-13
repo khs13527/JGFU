@@ -77,10 +77,11 @@ public class PostService {
             commentResponseDtoList.add(
                     CommentResponseDto.builder()
                             .id(comment.getId())
-                            .memberId(comment.getMember().getId())
+                            .memberId(comment.getMember().getMemberId())
                             .content(comment.getContent())
                             .createdAt(comment.getCreatedAt())
                             .modifiedAt(comment.getModifiedAt())
+                            .postId(comment.getPost().getId())
                             .build()
             );
         }
@@ -94,6 +95,7 @@ public class PostService {
                         .category(post.get().getCategory())
                         .views(post.get().getViews())
                         .commentResponseDtoList(commentResponseDtoList)
+                        .memberId(post.get().getMember().getMemberId())
                         .build()
         );
 
