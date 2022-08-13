@@ -14,5 +14,5 @@ public interface DibsRepository extends JpaRepository<Dibs,Long> {
     Optional<Dibs> findByPost(Post post);
     void deleteByPostAndMember(Post post, Member member);
 
-    Dibs findByMember(Member member);
+    Dibs findByMemberAndPost(Member member, Optional<Post> post);
 }

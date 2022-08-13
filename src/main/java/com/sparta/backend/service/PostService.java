@@ -143,8 +143,10 @@ public class PostService {
         if(post.isEmpty()){
             throw new NotFoundException("게시글을 찾을 수 없습니다.");
         }
-        Dibs dibs = dibsRepository.findByMember(member);
-        Boolean dibsResult = !dibs.toString().isEmpty();
+        boolean dibsResult;
+
+        dibsResult = null != dibsRepository.findByMemberAndPost(member, post);
+
         addViewCount(post.get());
         List<Comment> commentList = commentRepository.findAllByPost(post.get());
         List<CommentResponseDto> commentResponseDtoList = new ArrayList<>();
