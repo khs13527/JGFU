@@ -8,8 +8,8 @@ import lombok.Getter;
 @AllArgsConstructor
 public class TwoSetsResponseDto<T> {
     private boolean success;
-    private T data1;
-    private T data2;
+    private T uploads;
+    private T dibs;
     private Error error;
 
     public static <T> TwoSetsResponseDto<T> success(T data1 ,T data2) {

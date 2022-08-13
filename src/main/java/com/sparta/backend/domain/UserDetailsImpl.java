@@ -2,7 +2,6 @@ package com.sparta.backend.domain;
 
 import java.util.ArrayList;
 import java.util.Collection;
-
 import com.sparta.backend.shared.Authority;
 import lombok.AllArgsConstructor;
 import lombok.Data;
