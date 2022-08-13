@@ -2,6 +2,7 @@ package com.sparta.backend.service;
 
 
 import com.amazonaws.services.kms.model.NotFoundException;
+import com.amazonaws.services.s3.AmazonS3Client;
 import com.sparta.backend.S3.S3Uploader;
 import com.sparta.backend.domain.Comment;
 import com.sparta.backend.domain.Member;
@@ -17,6 +18,7 @@ import com.sparta.backend.repository.DibsRepository;
 import com.sparta.backend.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -38,6 +40,12 @@ public class PostService {
     private final S3Uploader s3Uploader;
     private final JwtTokenProvider jwtTokenProvider;
     private final DibsRepository dibsRepository;
+
+    private final AmazonS3Client amazonS3Client;
+
+    @Value("${bucketName}")
+    private String bucket;
+
     public ResponseDto<?> searchPosts() {
         List<Post> postList = postRepository.findAllByOrderByCreatedAtDesc();
         List<AllPostResponseDto> allPostResponseDtoList = new ArrayList<>();
@@ -148,5 +156,54 @@ public class PostService {
     public void addViewCount(Post post) {
         post.viewsAddCount();
         post.updateView(post);
+    }
+
+    @Transactional
+    public ResponseDto<?> updatePost(Long postId, PostRequestDto postRequestDto, MultipartFile file, HttpServletRequest request) throws IOException {
+        if (null == request.getHeader("Authorization")) {
+            return ResponseDto.fail("MEMBER_NOT_FOUND",
+                    "로그인이 필요합니다.");
+        }
+
+        Member member = validateMember(request);
+        if (null == member) {
+            return ResponseDto.fail("INVALID_TOKEN", "Token이 유효하지 않습니다.");
+        }
+
+        Optional<Post> post = postRepository.findById(postId);
+        if(post.isEmpty()){
+            throw new NotFoundException("게시글을 찾을 수 없습니다.");
+        }
+        String key = post.get().getImgUrl().substring("https://mysparta00.s3.ap-northeast-2.amazonaws.com/".length());
+        amazonS3Client.deleteObject(bucket, key);
+
+        String imgUrl = s3Uploader.uploadFiles(file, "static");
+
+        post.get().update(postRequestDto, imgUrl);
+
+        return ResponseDto.success("게시글 수정완료");
+    }
+
+    @Transactional
+    public ResponseDto<?> deletePost(Long postId, HttpServletRequest request){
+        if (null == request.getHeader("Authorization")) {
+            return ResponseDto.fail("MEMBER_NOT_FOUND",
+                    "로그인이 필요합니다.");
+        }
+
+        Member member = validateMember(request);
+        if (null == member) {
+            return ResponseDto.fail("INVALID_TOKEN", "Token이 유효하지 않습니다.");
+        }
+
+        Optional<Post> post = postRepository.findById(postId);
+        if(post.isEmpty()){
+            throw new NotFoundException("게시글을 찾을 수 없습니다.");
+        }
+        String key = post.get().getImgUrl().substring("https://mysparta00.s3.ap-northeast-2.amazonaws.com/".length());
+        amazonS3Client.deleteObject(bucket, key);
+        postRepository.delete(post.get());
+
+        return ResponseDto.success("삭제 완료");
     }
 }
