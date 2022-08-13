@@ -1,17 +1,18 @@
 package com.sparta.backend.config;
 
-import com.myphoto.backend.security.jwt.JwtAccessDeniedHandler;
-import com.myphoto.backend.security.jwt.JwtAuthenticationEntryPoint;
-import com.myphoto.backend.security.jwt.JwtTokenFilterConfigurer;
-import com.myphoto.backend.security.jwt.JwtTokenProvider;
 import com.sparta.backend.jwt.JwtAccessDeniedHandler;
 import com.sparta.backend.jwt.JwtAuthenticationEntryPoint;
 import com.sparta.backend.jwt.JwtTokenFilterConfigurer;
+import com.sparta.backend.jwt.JwtTokenProvider;
+import com.sparta.backend.service.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -20,6 +21,16 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @RequiredArgsConstructor
 @Configuration
 public class SecurityConfig {
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Value("${jwt.secret}")
+    String SECRET_KEY;
+
+    private final UserDetailsServiceImpl userDetailsService;
 
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
@@ -47,7 +58,7 @@ public class SecurityConfig {
                 .anyRequest().permitAll()
 
                 .and()
-                .apply(new JwtTokenFilterConfigurer(jwtTokenProvider));
+                .apply(new JwtTokenFilterConfigurer(SECRET_KEY,jwtTokenProvider, userDetailsService));
         return http.build();
     }
 
