@@ -1,5 +1,6 @@
 package com.sparta.backend.domain;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,11 +12,11 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+
 @Entity
 public class Member extends Timestamped {
 
@@ -58,5 +59,4 @@ public class Member extends Timestamped {
     public boolean validatePassword(PasswordEncoder passwordEncoder, String password) {
         return passwordEncoder.matches(password, this.password);
     }
-
 }
