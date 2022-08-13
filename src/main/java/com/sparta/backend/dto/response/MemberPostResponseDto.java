@@ -1,28 +1,26 @@
 package com.sparta.backend.dto.response;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.util.List;
 
 @Builder
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class AllPostResponseDto {
+public class MemberPostResponseDto {
     private Long id;
     private String title;
     private String content;
-    private String imgUrl;
+    private String memberId;
     private Long price;
+    private String imgUrl;
     private String category;
-    private Long dibCount;
-    private String category;
-    private Long view;
-    private Long commentsCount;
-    private LocalDateTime createdAt;
-    private LocalDateTime modifiedAt;
+    private Boolean dibsResult;
+    private Long views;
+    private List<CommentResponseDto> commentResponseDtoList;
 }
+

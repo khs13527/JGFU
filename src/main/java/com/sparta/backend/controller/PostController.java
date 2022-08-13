@@ -37,6 +37,11 @@ public class PostController {
         return postService.getPostDetail(postId);
     }
 
+    @GetMapping("/api/auth/posts/{postId}")
+    public ResponseDto<?> memberGetPostDetail(@PathVariable Long postId, HttpServletRequest request){
+        return postService.getMemberPostDetail(postId, request);
+    }
+
     @GetMapping(value = "/api/category/{category}")
     public ResponseDto<?> getPostByCategory(@PathVariable String category){
         return postService.getPostByCategory(category);

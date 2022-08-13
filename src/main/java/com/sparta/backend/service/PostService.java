@@ -4,13 +4,11 @@ package com.sparta.backend.service;
 import com.amazonaws.services.kms.model.NotFoundException;
 import com.sparta.backend.S3.S3Uploader;
 import com.sparta.backend.domain.Comment;
+import com.sparta.backend.domain.Dibs;
 import com.sparta.backend.domain.Member;
 import com.sparta.backend.domain.Post;
 import com.sparta.backend.dto.request.PostRequestDto;
-import com.sparta.backend.dto.response.AllPostResponseDto;
-import com.sparta.backend.dto.response.CommentResponseDto;
-import com.sparta.backend.dto.response.PostResponseDto;
-import com.sparta.backend.dto.response.ResponseDto;
+import com.sparta.backend.dto.response.*;
 import com.sparta.backend.jwt.JwtTokenProvider;
 import com.sparta.backend.repository.CommentRepository;
 import com.sparta.backend.repository.DibsRepository;
@@ -53,6 +51,7 @@ public class PostService {
                             .content(post.getContent())
                             .imgUrl(post.getImgUrl())
                             .price(post.getPrice())
+                            .category(post.getCategory())
                             .dibCount(dibCount)
                             .view(post.getViews())
                             .commentsCount(commentsCount)
@@ -127,6 +126,56 @@ public class PostService {
                         .build()
         );
 
+    }
+
+    @Transactional
+    public ResponseDto<?> getMemberPostDetail(Long postId, HttpServletRequest request){
+        if (null == request.getHeader("Authorization")) {
+            return ResponseDto.fail("MEMBER_NOT_FOUND",
+                    "로그인이 필요합니다.");
+        }
+
+        Member member = validateMember(request);
+        if (null == member) {
+            return ResponseDto.fail("INVALID_TOKEN", "Token이 유효하지 않습니다.");
+        }
+        Optional<Post> post = postRepository.findById(postId);
+        if(post.isEmpty()){
+            throw new NotFoundException("게시글을 찾을 수 없습니다.");
+        }
+        boolean dibsResult;
+
+        dibsResult = null != dibsRepository.findByMemberAndPost(member, post);
+
+        addViewCount(post.get());
+        List<Comment> commentList = commentRepository.findAllByPost(post.get());
+        List<CommentResponseDto> commentResponseDtoList = new ArrayList<>();
+        for(Comment comment : commentList) {
+            commentResponseDtoList.add(
+                    CommentResponseDto.builder()
+                            .id(comment.getId())
+                            .memberId(comment.getMember().getMemberId())
+                            .content(comment.getContent())
+                            .createdAt(comment.getCreatedAt())
+                            .modifiedAt(comment.getModifiedAt())
+                            .postId(comment.getPost().getId())
+                            .build()
+            );
+        }
+        return ResponseDto.success(
+                MemberPostResponseDto.builder()
+                        .id(post.get().getId())
+                        .title(post.get().getTitle())
+                        .content(post.get().getContent())
+                        .price(post.get().getPrice())
+                        .imgUrl(post.get().getImgUrl())
+                        .category(post.get().getCategory())
+                        .dibsResult(dibsResult)
+                        .views(post.get().getViews())
+                        .commentResponseDtoList(commentResponseDtoList)
+                        .memberId(post.get().getMember().getMemberId())
+                        .build()
+        );
     }
 
     @Transactional
