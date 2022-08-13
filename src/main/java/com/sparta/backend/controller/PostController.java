@@ -42,8 +42,8 @@ public class PostController {
         return postService.getMemberPostDetail(postId, request);
     }
 
-//    @GetMapping(value = "/api/category/{category}")
-//    public ResponseDto<?> getPostByCategory(@PathVariable String category){
-//        return postService.getPostByCategory(category);
-//    }
+    @GetMapping(value = "/api/category/{category}")
+    public ResponseDto<?> getPostByCategory(@PathVariable String category){
+        return postService.getPostByCategory(category);
+    }
 }

@@ -15,6 +15,7 @@ import com.sparta.backend.repository.DibsRepository;
 import com.sparta.backend.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -40,7 +41,6 @@ public class PostService {
         List<Post> postList = postRepository.findAllByOrderByCreatedAtDesc();
         List<AllPostResponseDto> allPostResponseDtoList = new ArrayList<>();
 
-
         for (Post post : postList) {
             Long dibCount = dibsRepository.countByPost(post);
             Long commentsCount = commentRepository.countByPost(post);
@@ -62,7 +62,6 @@ public class PostService {
         }
         return ResponseDto.success(allPostResponseDtoList);
     }
-
 
     @Transactional
     public ResponseDto<?> createPost(PostRequestDto postRequestDto, MultipartFile file, HttpServletRequest request) throws IOException {
@@ -197,5 +196,33 @@ public class PostService {
     public void addViewCount(Post post) {
         post.viewsAddCount();
         post.updateView(post);
+    }
+
+    @Transactional
+    public ResponseDto<?> getPostByCategory(String category) {
+        List<Post> postList = postRepository.findByCategoryOrderByCreatedAtDesc(category);
+        List<AllPostResponseDto> categoryList = new ArrayList<>();
+
+        for (Post post : postList) {
+            Long dibCount = dibsRepository.countByPost(post);
+            Long commentsCount = commentRepository.countByPost(post);
+            categoryList.add(
+                    AllPostResponseDto.builder()
+                            .id(post.getId())
+                            .title(post.getTitle())
+                            .content(post.getContent())
+                            .imgUrl(post.getImgUrl())
+                            .price(post.getPrice())
+                            .category(post.getCategory())
+                            .dibCount(dibCount)
+                            .view(post.getViews())
+                            .commentsCount(commentsCount)
+                            .createdAt(post.getCreatedAt())
+                            .modifiedAt(post.getModifiedAt())
+                            .build()
+            );
+        }
+        return ResponseDto.success(categoryList);
+
     }
 }
