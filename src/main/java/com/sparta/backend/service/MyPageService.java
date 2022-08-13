@@ -44,6 +44,9 @@ public class MyPageService {
         List<Post> postList = postRepository.findAllByMember(member);
         List<MyPostResponseDto> myPostResponseDtoList = new ArrayList<>();
 
+        List<Dibs> dibsPostList = dibsRepository.findAllByMember(member);
+        List<MyPostResponseDto> dibsMyPostResponseDtoList = new ArrayList<>();
+
         for (Post post : postList) {
             Long dibCount = dibsRepository.countByPost(post);
             Long commentsCount = commentRepository.countByPost(post);
@@ -64,14 +67,13 @@ public class MyPageService {
             );
         }
 
-        List<Dibs> dibsPostList = dibsRepository.findAllByMember(member);
-        List<MyPostResponseDto> dibsMyPostResponseDtoList = new ArrayList<>();
+
 
         for (Dibs dibs : dibsPostList) {
             Post dibsPost = postRepository.findByDibsSet(dibs);
             Long dibCount = dibsRepository.countByPost(dibsPost);
             Long commentsCount = commentRepository.countByPost(dibsPost);
-            myPostResponseDtoList.add(
+            dibsMyPostResponseDtoList.add(
                     MyPostResponseDto.builder()
                             .id(dibsPost.getId())
                             .title(dibsPost.getTitle())
@@ -87,7 +89,7 @@ public class MyPageService {
                             .build()
             );
         }
-        return TwoSetsResponseDto.success(myPostResponseDtoList, dibsMyPostResponseDtoList);
+        return TwoSetsResponseDto.success(myPostResponseDtoList,dibsMyPostResponseDtoList);
     }
 
     @org.springframework.transaction.annotation.Transactional

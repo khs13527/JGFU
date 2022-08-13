@@ -9,11 +9,15 @@ import com.sparta.backend.repository.DibsRepository;
 import com.sparta.backend.repository.MemberRepository;
 import com.sparta.backend.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class DibsService {
@@ -37,10 +41,11 @@ public class DibsService {
             return ResponseDto.fail("NOT_FOUND", "존재하지 않는 게시글 id 입니다.");
         }
 
-        if(dibsRepository.findByPost(post).equals(null)){
+        if(dibsRepository.findByPost(post).isEmpty()){
             Dibs dibs = new Dibs();
             dibs.setMember(member);
             dibs.setPost(post);
+            dibsRepository.save(dibs);
             return ResponseDto.success("up");
         }else{
             dibsRepository.deleteByPostAndMember(post, member);
