@@ -18,6 +18,7 @@ public class MyPostResponseDto {
     private Long price;
     private Long memberId;
     private String imgUrl;
+    private String category;
     private Long dibCount;
     private Long commentsCount;
     private Long view;

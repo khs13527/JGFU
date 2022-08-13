@@ -51,6 +51,7 @@ public class PostService {
                             .content(post.getContent())
                             .imgUrl(post.getImgUrl())
                             .price(post.getPrice())
+                            .category(post.getCategory())
                             .dibCount(dibCount)
                             .view(post.getViews())
                             .commentsCount(commentsCount)

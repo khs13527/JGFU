@@ -19,6 +19,7 @@ public class AllPostResponseDto {
     private String imgUrl;
     private Long price;
     private Long dibCount;
+    private String category;
     private Long view;
     private Long commentsCount;
     private LocalDateTime createdAt;
