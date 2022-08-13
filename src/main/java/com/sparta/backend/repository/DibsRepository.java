@@ -11,8 +11,8 @@ import java.util.Optional;
 public interface DibsRepository extends JpaRepository<Dibs,Long> {
     Long countByPost(Post post);
     List<Dibs> findAllByMember(Member member);
-    Optional<Dibs> findByPost(Post post);
+    Optional<Dibs> findByPostAndMember(Post post, Member member);
     void deleteByPostAndMember(Post post, Member member);
 
-    Dibs findByMemberAndPost(Member member, Optional<Post> post);
+    Dibs findByMemberAndPost(Member member, Post post);
 }

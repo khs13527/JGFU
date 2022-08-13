@@ -41,10 +41,11 @@ public class DibsService {
             return ResponseDto.fail("NOT_FOUND", "존재하지 않는 게시글 id 입니다.");
         }
 
-        if(dibsRepository.findByPost(post).isEmpty()){
-            Dibs dibs = new Dibs();
-            dibs.setMember(member);
-            dibs.setPost(post);
+        if(dibsRepository.findByPostAndMember(post,member).isEmpty()){
+            Dibs dibs = Dibs.builder()
+                    .member(member)
+                    .post(post)
+                    .build();
             dibsRepository.save(dibs);
             return ResponseDto.success("up");
         }else{

@@ -1,6 +1,7 @@
 package com.sparta.backend.domain;
 
 
+import com.sparta.backend.dto.request.PostRequestDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -53,6 +54,14 @@ public class Post extends Timestamped {
 
     public void updateView(Post post) {
         this.views = post.getViews();
+    }
+
+    public void update(PostRequestDto postRequestDto, String imgUrl){
+        this.title = postRequestDto.getTitle();
+        this.content = postRequestDto.getContent();
+        this.price = postRequestDto.getPrice();
+        this.category = postRequestDto.getCategory();
+        this.imgUrl = imgUrl;
     }
 
 }

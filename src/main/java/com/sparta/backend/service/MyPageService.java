@@ -13,16 +13,19 @@ import com.sparta.backend.repository.DibsRepository;
 import com.sparta.backend.repository.MemberRepository;
 import com.sparta.backend.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
-
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class MyPageService {
     private final JwtTokenProvider jwtTokenProvider;
+
     private final MemberRepository memberRepository;
     private final PostRepository postRepository;
     private final DibsRepository dibsRepository;
@@ -94,7 +97,7 @@ public class MyPageService {
         return TwoSetsResponseDto.success(myPostResponseDtoList,dibsMyPostResponseDtoList);
     }
 
-    @org.springframework.transaction.annotation.Transactional
+    @Transactional
     public Member validateMember(HttpServletRequest request) {
         if (!jwtTokenProvider.validateToken(request.getHeader("Authorization").substring(7))) {
             return null;
