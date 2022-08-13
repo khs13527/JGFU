@@ -1,16 +1,19 @@
 package com.sparta.backend.service;
 
+
 import com.amazonaws.services.kms.model.NotFoundException;
 import com.sparta.backend.S3.S3Uploader;
 import com.sparta.backend.domain.Comment;
 import com.sparta.backend.domain.Member;
 import com.sparta.backend.domain.Post;
 import com.sparta.backend.dto.request.PostRequestDto;
+import com.sparta.backend.dto.response.AllPostResponseDto;
 import com.sparta.backend.dto.response.CommentResponseDto;
 import com.sparta.backend.dto.response.PostResponseDto;
 import com.sparta.backend.dto.response.ResponseDto;
 import com.sparta.backend.jwt.JwtTokenProvider;
 import com.sparta.backend.repository.CommentRepository;
+import com.sparta.backend.repository.DibsRepository;
 import com.sparta.backend.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,17 +27,43 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+
 @Slf4j
+
 @Service
 @RequiredArgsConstructor
 public class PostService {
     private final PostRepository postRepository;
-
     private final CommentRepository commentRepository;
-
     private final S3Uploader s3Uploader;
-
     private final JwtTokenProvider jwtTokenProvider;
+    private final DibsRepository dibsRepository;
+    public ResponseDto<?> searchPosts() {
+        List<Post> postList = postRepository.findAllByOrderByCreatedAtDesc();
+        List<AllPostResponseDto> allPostResponseDtoList = new ArrayList<>();
+
+
+        for (Post post : postList) {
+            Long dibCount = dibsRepository.countByPost(post);
+            Long commentsCount = commentRepository.countByPost(post);
+            allPostResponseDtoList.add(
+                    AllPostResponseDto.builder()
+                            .id(post.getId())
+                            .title(post.getTitle())
+                            .content(post.getContent())
+                            .imgUrl(post.getImgUrl())
+                            .price(post.getPrice())
+                            .dibCount(dibCount)
+                            .view(post.getViews())
+                            .commentsCount(commentsCount)
+                            .createdAt(post.getCreatedAt())
+                            .modifiedAt(post.getModifiedAt())
+                            .build()
+            );
+        }
+        return ResponseDto.success(allPostResponseDtoList);
+    }
+
 
     @Transactional
     public ResponseDto<?> createPost(PostRequestDto postRequestDto, MultipartFile file, HttpServletRequest request) throws IOException {
