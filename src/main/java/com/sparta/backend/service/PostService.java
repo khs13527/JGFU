@@ -49,7 +49,18 @@ public class PostService {
         for (Post post : postList) {
             Long dibCount = dibsRepository.countByPost(post);
             Long commentsCount = commentRepository.countByPost(post);
-            allPostResponseDtoList.add(AllPostResponseDto.builder().id(post.getId()).title(post.getTitle()).content(post.getContent()).imgUrl(post.getImgUrl()).price(post.getPrice()).category(post.getCategory()).dibCount(dibCount).view(post.getViews()).commentsCount(commentsCount).createdAt(post.getCreatedAt()).modifiedAt(post.getModifiedAt()).build());
+            allPostResponseDtoList.add(AllPostResponseDto.builder()
+                    .id(post.getId())
+                    .title(post.getTitle())
+                    .content(post.getContent())
+                    .imgUrl(post.getImgUrl())
+                    .price(post.getPrice())
+                    .category(post.getCategory())
+                    .dibCount(dibCount)
+                    .view(post.getViews())
+                    .commentsCount(commentsCount)
+                    .createdAt(post.getCreatedAt())
+                    .modifiedAt(post.getModifiedAt()).build());
         }
         return ResponseDto.success(allPostResponseDtoList);
     }
@@ -68,9 +79,24 @@ public class PostService {
         // 로그인 검증
         String imgUrl = s3Uploader.uploadFiles(file, "static");
 
-        Post post = Post.builder().title(postRequestDto.getTitle()).content(postRequestDto.getContent()).price(postRequestDto.getPrice()).imgUrl(imgUrl).category(postRequestDto.getCategory()).views(0L).member(member).build();
+        Post post = Post.builder()
+                .title(postRequestDto.getTitle())
+                .content(postRequestDto.getContent())
+                .price(postRequestDto.getPrice())
+                .imgUrl(imgUrl)
+                .category(postRequestDto.getCategory())
+                .views(0L)
+                .member(member).build();
         postRepository.save(post);
-        return ResponseDto.success("게시글 게시 완료");
+        return ResponseDto.success(PostResponseDto.builder()
+                .id(post.getId())
+                .title(post.getTitle())
+                .content(post.getContent())
+                .price(post.getPrice())
+                .imgUrl(post.getImgUrl())
+                .category(post.getCategory())
+                .memberId(post.getMember().getMemberId())
+                .build());
     }
 
     @Transactional
@@ -82,8 +108,16 @@ public class PostService {
         addViewCount(post.get());
         List<Comment> commentList = commentRepository.findAllByPost(post.get());
         List<CommentResponseDto> commentResponseDtoList = new ArrayList<>();
+        Long dibCount = dibsRepository.countByPost(post.get());
         for (Comment comment : commentList) {
-            commentResponseDtoList.add(CommentResponseDto.builder().id(comment.getId()).memberId(comment.getMember().getMemberId()).content(comment.getContent()).createdAt(comment.getCreatedAt()).modifiedAt(comment.getModifiedAt()).postId(comment.getPost().getId()).build());
+            commentResponseDtoList.add(CommentResponseDto.builder()
+                    .id(comment.getId())
+                    .memberId(comment.getMember().getMemberId())
+                    .content(comment.getContent())
+                    .createdAt(comment.getCreatedAt())
+                    .modifiedAt(comment.getModifiedAt())
+                    .postId(comment.getPost().getId())
+                    .build());
         }
         return ResponseDto.success(PostResponseDto.builder()
                 .id(post.get().getId())
@@ -94,9 +128,9 @@ public class PostService {
                 .category(post.get().getCategory())
                 .views(post.get().getViews())
                 .commentResponseDtoList(commentResponseDtoList)
+                .dibCount(dibCount)
                 .memberId(post.get().getMember().getMemberId())
                 .build());
-
     }
 
     @Transactional
@@ -114,7 +148,7 @@ public class PostService {
         }
         boolean dibsResult;
         dibsResult = null != dibsRepository.findByMemberAndPost(member, post.get());
-        return  ResponseDto.success(dibsResult);
+        return ResponseDto.success(dibsResult);
     }
 
     @Transactional
@@ -152,6 +186,11 @@ public class PostService {
         if (post.isEmpty()) {
             throw new NotFoundException("게시글을 찾을 수 없습니다.");
         }
+
+        if (post.get().validateMember(member)) {
+            return ResponseDto.fail("BAD_REQUEST", "작성자만 수정할 수 있습니다.");
+        }
+
         String key = post.get().getImgUrl().substring("https://mysparta00.s3.ap-northeast-2.amazonaws.com/".length());
         amazonS3Client.deleteObject(bucket, key);
 
@@ -159,7 +198,15 @@ public class PostService {
 
         post.get().update(postRequestDto, imgUrl);
 
-        return ResponseDto.success("게시글 수정완료");
+        return ResponseDto.success(PostResponseDto.builder()
+                .id(post.get().getId())
+                .title(post.get().getTitle())
+                .content(post.get().getContent())
+                .price(post.get().getPrice())
+                .imgUrl(post.get().getImgUrl())
+                .category(post.get().getCategory())
+                .memberId(post.get().getMember().getMemberId())
+                .build());
     }
 
     @Transactional
@@ -177,10 +224,14 @@ public class PostService {
         if (post.isEmpty()) {
             throw new NotFoundException("게시글을 찾을 수 없습니다.");
         }
+
+        if (post.get().validateMember(member)) {
+            return ResponseDto.fail("BAD_REQUEST", "작성자만 수정할 수 있습니다.");
+        }
+
         String key = post.get().getImgUrl().substring("https://mysparta00.s3.ap-northeast-2.amazonaws.com/".length());
         amazonS3Client.deleteObject(bucket, key);
         postRepository.delete(post.get());
-
         return ResponseDto.success("삭제 완료");
     }
 
@@ -192,7 +243,19 @@ public class PostService {
         for (Post post : postList) {
             Long dibCount = dibsRepository.countByPost(post);
             Long commentsCount = commentRepository.countByPost(post);
-            categoryList.add(AllPostResponseDto.builder().id(post.getId()).title(post.getTitle()).content(post.getContent()).imgUrl(post.getImgUrl()).price(post.getPrice()).category(post.getCategory()).dibCount(dibCount).view(post.getViews()).commentsCount(commentsCount).createdAt(post.getCreatedAt()).modifiedAt(post.getModifiedAt()).build());
+            categoryList.add(AllPostResponseDto.builder()
+                    .id(post.getId())
+                    .title(post.getTitle())
+                    .content(post.getContent())
+                    .imgUrl(post.getImgUrl())
+                    .price(post.getPrice())
+                    .category(post.getCategory())
+                    .dibCount(dibCount)
+                    .view(post.getViews())
+                    .commentsCount(commentsCount)
+                    .createdAt(post.getCreatedAt())
+                    .modifiedAt(post.getModifiedAt())
+                    .build());
         }
         return ResponseDto.success(categoryList);
     }
