@@ -79,9 +79,24 @@ public class PostService {
         // 로그인 검증
         String imgUrl = s3Uploader.uploadFiles(file, "static");
 
-        Post post = Post.builder().title(postRequestDto.getTitle()).content(postRequestDto.getContent()).price(postRequestDto.getPrice()).imgUrl(imgUrl).category(postRequestDto.getCategory()).views(0L).member(member).build();
+        Post post = Post.builder()
+                .title(postRequestDto.getTitle())
+                .content(postRequestDto.getContent())
+                .price(postRequestDto.getPrice())
+                .imgUrl(imgUrl)
+                .category(postRequestDto.getCategory())
+                .views(0L)
+                .member(member).build();
         postRepository.save(post);
-        return ResponseDto.success("게시글 게시 완료");
+        return ResponseDto.success(PostResponseDto.builder()
+                .id(post.getId())
+                .title(post.getTitle())
+                .content(post.getContent())
+                .price(post.getPrice())
+                .imgUrl(post.getImgUrl())
+                .category(post.getCategory())
+                .memberId(post.getMember().getMemberId())
+                .build());
     }
 
     @Transactional
@@ -183,7 +198,15 @@ public class PostService {
 
         post.get().update(postRequestDto, imgUrl);
 
-        return ResponseDto.success("게시글 수정완료");
+        return ResponseDto.success(PostResponseDto.builder()
+                .id(post.get().getId())
+                .title(post.get().getTitle())
+                .content(post.get().getContent())
+                .price(post.get().getPrice())
+                .imgUrl(post.get().getImgUrl())
+                .category(post.get().getCategory())
+                .memberId(post.get().getMember().getMemberId())
+                .build());
     }
 
     @Transactional
@@ -209,7 +232,6 @@ public class PostService {
         String key = post.get().getImgUrl().substring("https://mysparta00.s3.ap-northeast-2.amazonaws.com/".length());
         amazonS3Client.deleteObject(bucket, key);
         postRepository.delete(post.get());
-
         return ResponseDto.success("삭제 완료");
     }
 
