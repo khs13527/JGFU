@@ -58,7 +58,7 @@ public class SecurityConfig {
                 .anyRequest().permitAll()
 
                 .and()
-                .apply(new JwtTokenFilterConfigurer(SECRET_KEY,jwtTokenProvider, userDetailsService));
+                .apply(new JwtTokenFilterConfigurer(SECRET_KEY, jwtTokenProvider, userDetailsService));
         return http.build();
     }
 
@@ -71,6 +71,7 @@ public class SecurityConfig {
         configuration.addAllowedMethod("*");
         configuration.setAllowCredentials(true);
         configuration.addExposedHeader("*");
+        configuration.addExposedHeader("Authorization");
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);

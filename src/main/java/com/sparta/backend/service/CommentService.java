@@ -5,6 +5,7 @@ import com.sparta.backend.domain.Comment;
 import com.sparta.backend.domain.Member;
 import com.sparta.backend.domain.Post;
 import com.sparta.backend.dto.request.CommentRequestDto;
+import com.sparta.backend.dto.response.CommentResponseDto;
 import com.sparta.backend.dto.response.ResponseDto;
 import com.sparta.backend.jwt.JwtTokenProvider;
 import com.sparta.backend.repository.CommentRepository;
@@ -46,9 +47,20 @@ public class CommentService {
                 .member(member)
                 .post(post)
                 .content(commentRequestDto.getContent())
+                .isEditMode(false)
                 .build();
         commentRepository.save(comment);
-        return ResponseDto.success("댓글 게시 완료");
+        return ResponseDto.success(
+                CommentResponseDto.builder()
+                .id(comment.getId())
+                .memberId(comment.getMember().getMemberId())
+                .content(comment.getContent())
+                .isEditMode(comment.getIsEditMode())
+                .createdAt(comment.getCreatedAt())
+                .modifiedAt(comment.getModifiedAt())
+                .postId(comment.getPost().getId())
+                .build()
+        );
     }
 
     @Transactional
@@ -79,7 +91,17 @@ public class CommentService {
         }
 
         comment.update(commentRequestDto);
-        return ResponseDto.success("댓글 수정 완료");
+        return ResponseDto.success(
+                CommentResponseDto.builder()
+                        .id(comment.getId())
+                        .memberId(comment.getMember().getMemberId())
+                        .content(comment.getContent())
+                        .isEditMode(comment.getIsEditMode())
+                        .createdAt(comment.getCreatedAt())
+                        .modifiedAt(comment.getModifiedAt())
+                        .postId(comment.getPost().getId())
+                        .build()
+        );
     }
 
     @Transactional
@@ -110,7 +132,16 @@ public class CommentService {
         }
 
         commentRepository.delete(comment);
-        return ResponseDto.success("댓글 삭제 완료");
+        return ResponseDto.success(
+                CommentResponseDto.builder()
+                        .id(comment.getId())
+                        .memberId(comment.getMember().getMemberId())
+                        .content(comment.getContent())
+                        .createdAt(comment.getCreatedAt())
+                        .modifiedAt(comment.getModifiedAt())
+                        .postId(comment.getPost().getId())
+                        .build()
+        );
     }
 
     @Transactional
