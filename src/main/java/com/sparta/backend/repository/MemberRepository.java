@@ -8,7 +8,6 @@ import java.util.Optional;
 public interface MemberRepository extends JpaRepository<Member,Long> {
 
     Member findByPostSet(Post post);
-
     Optional<Member> findById(Long id);
     Optional<Member> findByMemberId(String memberId);
 
