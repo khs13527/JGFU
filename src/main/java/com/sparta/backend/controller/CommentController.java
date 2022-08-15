@@ -27,7 +27,7 @@ public class CommentController {
         return commentService.deleteComment(postId, commentId, request);
     }
 
-    @GetMapping(value ="/api/auth/posts/{postId}/comments")
+    @GetMapping(value ="/api/posts/{postId}/comments")
     public ResponseDto<?> getComment(@PathVariable Long postId){
         return commentService.getComment(postId);
     }
