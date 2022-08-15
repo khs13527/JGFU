@@ -14,6 +14,7 @@ public class CommentResponseDto {
     private Long id;
     private String content;
     private String memberId;
+    private Boolean isEditMode;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
     private Long postId;

@@ -58,7 +58,7 @@ public class SecurityConfig {
                 .anyRequest().permitAll()
 
                 .and()
-                .apply(new JwtTokenFilterConfigurer(SECRET_KEY,jwtTokenProvider, userDetailsService));
+                .apply(new JwtTokenFilterConfigurer(SECRET_KEY, jwtTokenProvider, userDetailsService));
         return http.build();
     }
 
