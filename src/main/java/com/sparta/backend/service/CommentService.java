@@ -129,18 +129,8 @@ public class CommentService {
         if (comment.validateMember(member)) {
             return ResponseDto.fail("BAD_REQUEST", "작성자만 수정할 수 있습니다.");
         }
-
         commentRepository.delete(comment);
-        return ResponseDto.success(
-                CommentResponseDto.builder()
-                        .id(comment.getId())
-                        .memberId(comment.getMember().getMemberId())
-                        .content(comment.getContent())
-                        .createdAt(comment.getCreatedAt())
-                        .modifiedAt(comment.getModifiedAt())
-                        .postId(comment.getPost().getId())
-                        .build()
-        );
+        return ResponseDto.success("삭제 완료");
     }
 
     @Transactional

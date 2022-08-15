@@ -130,6 +130,7 @@ public class PostService {
                 .commentResponseDtoList(commentResponseDtoList)
                 .dibCount(dibCount)
                 .memberId(post.get().getMember().getMemberId())
+                .isEditMode(false)
                 .build());
     }
 

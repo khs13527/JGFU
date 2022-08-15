@@ -5,7 +5,6 @@ import com.sparta.backend.domain.Dibs;
 import com.sparta.backend.domain.Member;
 import com.sparta.backend.domain.Post;
 import com.sparta.backend.dto.response.MyPostResponseDto;
-import com.sparta.backend.dto.response.ResponseDto;
 import com.sparta.backend.dto.response.TwoSetsResponseDto;
 import com.sparta.backend.jwt.JwtTokenProvider;
 import com.sparta.backend.repository.CommentRepository;
@@ -20,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -47,7 +47,7 @@ public class MyPageService {
         List<Post> postList = postRepository.findAllByMember(member);
         List<MyPostResponseDto> myPostResponseDtoList = new ArrayList<>();
 
-        List<Dibs> dibsPostList = dibsRepository.findAllByMember(member);
+        List<Dibs> dibsList = dibsRepository.findAllByMember(member);
         List<MyPostResponseDto> dibsMyPostResponseDtoList = new ArrayList<>();
 
         for (Post post : postList) {
@@ -69,28 +69,26 @@ public class MyPageService {
                             .modifiedAt(post.getModifiedAt())
                             .build()
             );
+
         }
-
-
-
-        for (Dibs dibs : dibsPostList) {
-            Post dibsPost = postRepository.findByDibsSet(dibs);
-            Long dibCount = dibsRepository.countByPost(dibsPost);
-            Long commentsCount = commentRepository.countByPost(dibsPost);
+        for (Dibs dibs : dibsList) {
+            Post post = postRepository.findDibsPostById(dibs.getPost().getId());
+            Long dibCount = dibsRepository.countByPost(post);
+            Long commentsCount = commentRepository.countByPost(post);
             dibsMyPostResponseDtoList.add(
                     MyPostResponseDto.builder()
-                            .id(dibsPost.getId())
-                            .title(dibsPost.getTitle())
-                            .content(dibsPost.getContent())
-                            .price(dibsPost.getPrice())
+                            .id(post.getId())
+                            .title(post.getTitle())
+                            .content(post.getContent())
+                            .price(post.getPrice())
                             .memberId(member.getId())
-                            .imgUrl(dibsPost.getImgUrl())
-                            .category(dibsPost.getCategory())
+                            .imgUrl(post.getImgUrl())
+                            .category(post.getCategory())
                             .dibCount(dibCount)
                             .commentsCount(commentsCount)
-                            .view(dibsPost.getViews())
-                            .createdAt(dibsPost.getCreatedAt())
-                            .modifiedAt(dibsPost.getModifiedAt())
+                            .view(post.getViews())
+                            .createdAt(post.getCreatedAt())
+                            .modifiedAt(post.getModifiedAt())
                             .build()
             );
         }
