@@ -47,7 +47,6 @@ public class CommentService {
                 .member(member)
                 .post(post)
                 .content(commentRequestDto.getContent())
-                .isEditMode(false)
                 .build();
         commentRepository.save(comment);
         return ResponseDto.success(
@@ -55,7 +54,7 @@ public class CommentService {
                 .id(comment.getId())
                 .memberId(comment.getMember().getMemberId())
                 .content(comment.getContent())
-                .isEditMode(comment.getIsEditMode())
+                .isEditMode(false)
                 .createdAt(comment.getCreatedAt())
                 .modifiedAt(comment.getModifiedAt())
                 .postId(comment.getPost().getId())
@@ -96,7 +95,7 @@ public class CommentService {
                         .id(comment.getId())
                         .memberId(comment.getMember().getMemberId())
                         .content(comment.getContent())
-                        .isEditMode(comment.getIsEditMode())
+                        .isEditMode(false)
                         .createdAt(comment.getCreatedAt())
                         .modifiedAt(comment.getModifiedAt())
                         .postId(comment.getPost().getId())
