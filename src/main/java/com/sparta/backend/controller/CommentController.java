@@ -26,4 +26,9 @@ public class CommentController {
     public ResponseDto<?> deleteComment(@PathVariable Long postId, @PathVariable Long commentId,HttpServletRequest request){
         return commentService.deleteComment(postId, commentId, request);
     }
+
+    @GetMapping(value ="/api/auth/posts/{postId}/comments")
+    public ResponseDto<?> getComment(@PathVariable Long postId){
+        return commentService.getComment(postId);
+    }
 }

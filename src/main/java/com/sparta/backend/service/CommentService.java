@@ -9,11 +9,14 @@ import com.sparta.backend.dto.response.CommentResponseDto;
 import com.sparta.backend.dto.response.ResponseDto;
 import com.sparta.backend.jwt.JwtTokenProvider;
 import com.sparta.backend.repository.CommentRepository;
+import com.sparta.backend.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -24,6 +27,8 @@ public class CommentService {
     private final JwtTokenProvider jwtTokenProvider;
 
     private final PostService postService;
+
+    private final PostRepository postRepository;
 
     @Transactional
     public ResponseDto<?> createComment(CommentRequestDto commentRequestDto, Long postId, HttpServletRequest request){
@@ -145,5 +150,24 @@ public class CommentService {
     public Comment isPresentComment(Long id) {
         Optional<Comment> optionalComment = commentRepository.findById(id);
         return optionalComment.orElse(null);
+    }
+
+    @Transactional
+    public ResponseDto<?> getComment(Long postId) {
+        Optional<Post> post = postRepository.findById(postId);
+        List<Comment> commentList = commentRepository.findAllByPost(post.get());
+        List<CommentResponseDto> commentResponseDtoList = new ArrayList<>();
+        for (Comment comment : commentList) {
+            commentResponseDtoList.add(CommentResponseDto.builder()
+                    .id(comment.getId())
+                    .memberId(comment.getMember().getMemberId())
+                    .content(comment.getContent())
+                    .createdAt(comment.getCreatedAt())
+                    .modifiedAt(comment.getModifiedAt())
+                    .postId(comment.getPost().getId())
+                    .isEditMode(false)
+                    .build());
+        }
+        return ResponseDto.success(commentResponseDtoList);
     }
 }
