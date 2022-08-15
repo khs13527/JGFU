@@ -117,6 +117,7 @@ public class PostService {
                     .createdAt(comment.getCreatedAt())
                     .modifiedAt(comment.getModifiedAt())
                     .postId(comment.getPost().getId())
+                    .isEditMode(false)
                     .build());
         }
         return ResponseDto.success(PostResponseDto.builder()
