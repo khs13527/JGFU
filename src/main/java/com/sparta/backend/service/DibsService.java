@@ -43,10 +43,10 @@ public class DibsService {
                     .post(post)
                     .build();
             dibsRepository.save(dibs);
-            return ResponseDto.success("up");
+            return ResponseDto.success(true);
         }else{
             dibsRepository.deleteByPostAndMember(post, member);
-         return ResponseDto.success("down");
+         return ResponseDto.success(false);
         }
     }
     @org.springframework.transaction.annotation.Transactional
