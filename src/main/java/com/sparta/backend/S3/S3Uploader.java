@@ -22,6 +22,7 @@ public class S3Uploader {
     private final AmazonS3Client amazonS3Client;
     @Value("${bucketName}")
     private String bucket;
+
     public String uploadFiles(MultipartFile multipartFile, String dirName) throws IOException {
         File uploadFile = convert(multipartFile)  // 파일 변환할 수 없으면 에러
                 .orElseThrow(() -> new IllegalArgumentException("error: MultipartFile -> File convert fail"));
