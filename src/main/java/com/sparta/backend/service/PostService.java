@@ -212,6 +212,7 @@ public class PostService {
                 .category(post.get().getCategory())
                 .memberId(post.get().getMember().getMemberId())
                 .isDone(post.get().getIsDone())
+                .isEditMode(false)
                 .build());
     }
 
