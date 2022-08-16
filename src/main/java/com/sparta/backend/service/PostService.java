@@ -86,6 +86,7 @@ public class PostService {
                 .imgUrl(imgUrl)
                 .category(postRequestDto.getCategory())
                 .views(0L)
+                .isDone(false)
                 .member(member).build();
         postRepository.save(post);
         return ResponseDto.success(PostResponseDto.builder()
@@ -95,6 +96,7 @@ public class PostService {
                 .price(post.getPrice())
                 .imgUrl(post.getImgUrl())
                 .category(post.getCategory())
+                .isDone(post.getIsDone())
                 .memberId(post.getMember().getMemberId())
                 .build());
     }
@@ -132,6 +134,7 @@ public class PostService {
                 .dibCount(dibCount)
                 .memberId(post.get().getMember().getMemberId())
                 .isEditMode(false)
+                .isDone(post.get().getIsDone())
                 .build());
     }
 
@@ -208,6 +211,7 @@ public class PostService {
                 .imgUrl(post.get().getImgUrl())
                 .category(post.get().getCategory())
                 .memberId(post.get().getMember().getMemberId())
+                .isDone(post.get().getIsDone())
                 .build());
     }
 
@@ -260,5 +264,43 @@ public class PostService {
                     .build());
         }
         return ResponseDto.success(categoryList);
+    }
+
+    @Transactional
+    public ResponseDto<?> updatePostDone(Long postId, HttpServletRequest request){
+        if (null == request.getHeader("Authorization")) {
+            return ResponseDto.fail("MEMBER_NOT_FOUND", "로그인이 필요합니다.");
+        }
+
+        Member member = validateMember(request);
+        if (null == member) {
+            return ResponseDto.fail("INVALID_TOKEN", "Token이 유효하지 않습니다.");
+        }
+
+        Optional<Post> post = postRepository.findById(postId);
+        if (post.isEmpty()) {
+            throw new NotFoundException("게시글을 찾을 수 없습니다.");
+        }
+
+        if (post.get().validateMember(member)) {
+            return ResponseDto.fail("BAD_REQUEST", "작성자만 수정할 수 있습니다.");
+        }
+
+        getPostDone(post.get());
+        return ResponseDto.success(PostResponseDto.builder()
+                .id(post.get().getId())
+                .title(post.get().getTitle())
+                .content(post.get().getContent())
+                .price(post.get().getPrice())
+                .imgUrl(post.get().getImgUrl())
+                .category(post.get().getCategory())
+                .memberId(post.get().getMember().getMemberId())
+                .isDone(post.get().getIsDone())
+                .build());
+    }
+    @Transactional
+    public void getPostDone(Post post) {
+        post.getPostDone();
+        post.updateDone(post);
     }
 }

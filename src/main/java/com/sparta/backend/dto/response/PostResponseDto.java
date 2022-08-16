@@ -22,5 +22,6 @@ public class PostResponseDto {
     private Long dibCount;
     private Long views;
     private Boolean isEditMode;
+    private Boolean isDone;
     private List<CommentResponseDto> commentResponseDtoList;
 }
