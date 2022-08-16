@@ -37,7 +37,7 @@ public class PostController {
     }
 
     @DeleteMapping(value = "/api/auth/posts/{postId}")
-    public ResponseDto<?> updatePost (@PathVariable Long postId, HttpServletRequest request) throws IOException {
+    public ResponseDto<?> deletePost (@PathVariable Long postId, HttpServletRequest request) throws IOException {
         return postService.deletePost(postId, request);
     }
     @GetMapping(value = "/api/category/{category}")
