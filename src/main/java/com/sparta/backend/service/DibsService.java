@@ -6,12 +6,8 @@ import com.sparta.backend.domain.Post;
 import com.sparta.backend.dto.response.ResponseDto;
 import com.sparta.backend.jwt.JwtTokenProvider;
 import com.sparta.backend.repository.DibsRepository;
-import com.sparta.backend.repository.MemberRepository;
-import com.sparta.backend.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -47,10 +43,10 @@ public class DibsService {
                     .post(post)
                     .build();
             dibsRepository.save(dibs);
-            return ResponseDto.success("up");
+            return ResponseDto.success(true);
         }else{
             dibsRepository.deleteByPostAndMember(post, member);
-         return ResponseDto.success("down");
+         return ResponseDto.success(false);
         }
     }
     @org.springframework.transaction.annotation.Transactional

@@ -7,10 +7,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.security.core.parameters.P;
 
 import java.util.List;
+import java.util.Set;
 
 public interface PostRepository extends JpaRepository<Post,Long> {
     List<Post> findAllByOrderByCreatedAtDesc();
     List<Post> findAllByMember(Member member);
-    Post findByDibsSet(Dibs dibs);
     List<Post> findByCategoryOrderByCreatedAtDesc(String category);
+
+    Post findDibsPostById(Long id);
 }
