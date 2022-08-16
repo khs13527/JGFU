@@ -210,6 +210,7 @@ public class PostService {
                 .price(post.get().getPrice())
                 .imgUrl(post.get().getImgUrl())
                 .category(post.get().getCategory())
+                .isEditMode(false)
                 .memberId(post.get().getMember().getMemberId())
                 .isDone(post.get().getIsDone())
                 .build());
