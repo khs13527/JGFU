@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -38,6 +39,10 @@ public class Post extends Timestamped {
     @Column
     private Long views = 0L;
 
+    @Column
+    private Boolean isDone = false;
+
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Comment> commentSet;
 
@@ -66,6 +71,13 @@ public class Post extends Timestamped {
 
     public boolean validateMember(Member member) {
         return !this.member.equals(member);
+    }
+    public void getPostDone(){
+        this.isDone = true;
+    }
+
+    public void updateDone(Post post) {
+        this.isDone = post.getIsDone();
     }
 
 }
