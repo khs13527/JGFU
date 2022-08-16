@@ -1,6 +1,5 @@
 package com.sparta.backend.service;
 
-import com.amazonaws.Response;
 import com.sparta.backend.domain.Comment;
 import com.sparta.backend.domain.Member;
 import com.sparta.backend.domain.Post;
@@ -155,6 +154,9 @@ public class CommentService {
     @Transactional
     public ResponseDto<?> getComment(Long postId) {
         Optional<Post> post = postRepository.findById(postId);
+        if (post.isEmpty()){
+            return ResponseDto.fail("NOT_FOUND", "존재하지 않는 게시글 id 입니다.");
+        }
         List<Comment> commentList = commentRepository.findAllByPost(post.get());
         List<CommentResponseDto> commentResponseDtoList = new ArrayList<>();
         for (Comment comment : commentList) {

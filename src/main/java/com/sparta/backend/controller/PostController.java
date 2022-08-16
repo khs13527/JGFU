@@ -44,5 +44,10 @@ public class PostController {
     public ResponseDto<?> getPostByCategory(@PathVariable String category){
         return postService.getPostByCategory(category);
     }
+    @PutMapping(value = "/api/auth/posts/{postId}/done")
+    public ResponseDto<?> updatePostDone(@PathVariable Long postId, HttpServletRequest request) {
+        return postService.updatePostDone(postId, request);
+    }
+
 
 }
