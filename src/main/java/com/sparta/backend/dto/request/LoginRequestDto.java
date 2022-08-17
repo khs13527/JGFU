@@ -10,7 +10,7 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 public class LoginRequestDto {
 
-    @javax.validation.constraints.NotBlank
+    @NotBlank
     private String memberId;
 
     @NotBlank
