@@ -106,7 +106,7 @@ public class PostService {
     public ResponseDto<?> getPostDetail(Long postId) {
         Optional<Post> post = postRepository.findById(postId);
         if (post.isEmpty()) {
-            throw new NotFoundException("게시글을 찾을 수 없습니다.");
+            return ResponseDto.fail("NOT_FOUND", "게시글을 찾을 수 없습니다.");
         }
         addViewCount(post.get());
         List<Comment> commentList = commentRepository.findAllByPost(post.get());

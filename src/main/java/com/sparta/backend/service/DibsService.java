@@ -49,7 +49,7 @@ public class DibsService {
          return ResponseDto.success(false);
         }
     }
-    @org.springframework.transaction.annotation.Transactional
+    @Transactional
     public Member validateMember(HttpServletRequest request) {
         if (!jwtTokenProvider.validateToken(request.getHeader("Authorization").substring(7))) {
             return null;

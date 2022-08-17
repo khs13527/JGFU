@@ -48,6 +48,4 @@ public class PostController {
     public ResponseDto<?> updatePostDone(@PathVariable Long postId, HttpServletRequest request) {
         return postService.updatePostDone(postId, request);
     }
-
-
 }
