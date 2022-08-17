@@ -18,6 +18,7 @@ public class AllPostResponseDto {
     private String content;
     private String imgUrl;
     private Long price;
+    private Boolean isDone;
     private String category;
     private Long dibCount;
     private Long view;
