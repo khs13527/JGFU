@@ -22,7 +22,7 @@ public class PostController {
 
 
     @PostMapping(value = "/api/auth/posts")
-    public ResponseDto<?> createPost(@RequestPart("data") PostRequestDto postRequestDto, @RequestPart("image")MultipartFile file, HttpServletRequest request) throws IOException {
+    public ResponseDto<?> createPost(@RequestPart("data") PostRequestDto postRequestDto, @RequestPart("image") MultipartFile file, HttpServletRequest request) throws IOException {
         return postService.createPost(postRequestDto, file, request);
     }
     @GetMapping(value = "/api/posts/{postId}")

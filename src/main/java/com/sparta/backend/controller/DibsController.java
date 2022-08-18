@@ -18,8 +18,8 @@ public class DibsController {
     private final DibsService dibsService;
     private final PostService postService;
     @PostMapping("/api/auth/dibs/posts/{postId}")
-    public ResponseDto<?> dibsButton(@PathVariable Long postId, HttpServletRequest request) {
-        return dibsService.dibsUpDown(postId, request);
+    public ResponseDto<?> toggleDibs(@PathVariable Long postId, HttpServletRequest request) {
+        return dibsService.toggleDibs(postId, request);
     }
     @GetMapping("/api/auth/dibs/posts/{postId}")
     public ResponseDto<?> memberGetPostDetail(@PathVariable Long postId, HttpServletRequest request){
