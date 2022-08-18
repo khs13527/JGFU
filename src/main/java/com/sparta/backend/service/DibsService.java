@@ -9,7 +9,6 @@ import com.sparta.backend.repository.DibsRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 
@@ -21,7 +20,7 @@ public class DibsService {
     private final PostService postService;
     private final DibsRepository dibsRepository;
     @Transactional
-    public ResponseDto<?> dibsUpDown(Long postId, HttpServletRequest request){
+    public ResponseDto<?> toggleDibs(Long postId, HttpServletRequest request){
         if (null == request.getHeader("Authorization")) {
             return ResponseDto.fail("MEMBER_NOT_FOUND",
                     "로그인이 필요합니다.");

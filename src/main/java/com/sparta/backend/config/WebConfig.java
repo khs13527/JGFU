@@ -9,7 +9,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOriginPatterns("*")
+                .allowedOriginPatterns("http://sparta-homework.shop")
                 .allowedMethods("*")
                 .allowedHeaders("*")
                 .allowCredentials(true)
